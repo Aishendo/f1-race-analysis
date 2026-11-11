@@ -39,3 +39,21 @@ def prepare_pace_laps(laps: pd.DataFrame) -> pd.DataFrame:
     )
 
     return prepared.loc[keep].copy()
+
+def summarise_pace(pace_laps: pd.DataFrame) -> pd.DataFrame:
+    """Calculate descriptive lap-time statistics for each driver.
+
+    Args:
+        pace_laps: Filtered lap data containing driver_number
+            and lap_duration.
+
+    Returns:
+        A DataFrame indexed by driver_number with lap counts,
+        median, standard deviation and fastest lap time.
+    """
+    return pace_laps.groupby("driver_number").agg(
+        laps=("lap_duration", "size"),
+        median_seconds=("lap_duration", "median"),
+        std_seconds=("lap_duration", "std"),
+        fastest_seconds=("lap_duration", "min"),
+    )
