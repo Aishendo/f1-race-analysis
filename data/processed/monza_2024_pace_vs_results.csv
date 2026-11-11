@@ -1,0 +1,4 @@
+driver_number,position,number_of_laps,duration,gap_to_leader,driver,median_seconds,fastest_seconds
+16,1.0,53,4480.727,0,Charles Leclerc,83.71600000000001,83.226
+81,2.0,53,4483.391,2.664,Oscar Piastri,83.468,81.943
+4,3.0,53,4486.88,6.153,Lando Norris,83.59100000000001,81.432
