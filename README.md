@@ -33,4 +33,5 @@ Run these commands from the project folder:
     .\.venv\Scripts\python.exe -m jupyterlab
 
 Open race_analysis.ipynb and run the cells in order.
-The current notebook requires internet access to fetch OpenF1 data.
+The notebook loads the included CSV snapshots from data/raw/.
+No internet connection is required to run the analysis after installing the dependencies.
