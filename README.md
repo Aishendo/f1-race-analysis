@@ -1,37 +1,147 @@
-# F1 Race Analysis — Monza 2024
+# Monza 2024: Race Pace and Tyre Strategies
 
 Python project for the Coding for Data Science and Data Management
 course, academic year 2026/2027.
 
 ## Objective
 
-Explore race pace and tyre strategies of Charles Leclerc,
-Lando Norris and Oscar Piastri at the 2024 Italian Grand Prix.
+Explore differences in race pace, tyre strategies and final results
+at the 2024 Italian Grand Prix.
+
+The project includes an overview of all 20 participants, detailed
+analysis of Charles Leclerc, Lando Norris and Oscar Piastri,
+and teammate comparisons for Ferrari, McLaren, Mercedes and Red Bull.
+
+## Research questions
+
+1. How did lap times vary between drivers throughout the race?
+2. How did tyre strategies and stint lengths differ?
+3. How did filtered race pace compare with final race results?
 
 ## Data source
 
-OpenF1 API: https://openf1.org/
+Data was originally downloaded from the
+[OpenF1 API](https://openf1.org/docs/).
 
-Session key: 9590.
-Downloaded CSV snapshots are stored in data/raw/.
+Race: 2024 Italian Grand Prix, Monza.
+Session key: `9590`.
 
-## Current progress
+The included CSV snapshots contain:
+- Drivers
+- Lap times
+- Tyre stints
+- Race control messages
+- Final session results
 
-- Loaded driver, lap, stint and race control data.
-- Checked missing lap times and duplicate laps.
-- Visualised lap times and tyre strategies.
-- Calculated preliminary race pace statistics.
+The notebook reads the snapshots from `data/raw/`.
+After dependencies are installed, running the analysis does not
+require internet access.
 
-The analysis is in progress.
+OpenF1 is an independent community project, not an official
+Formula 1 or FIA data service.
 
-## Setup and run on Windows
+## Project files
 
-Run these commands from the project folder:
+| File or folder | Purpose |
+|---|---|
+| `race_analysis.ipynb` | Analysis, visualisations and conclusions |
+| `data_io.py` | Loading saved CSV tables |
+| `analysis.py` | Lap filtering and descriptive pace statistics |
+| `plots.py` | Reusable race pace and tyre strategy plots |
+| `data/raw/` | Downloaded source snapshots |
+| `data/processed/` | Exported analysis tables |
+| `requirements.txt` | Python dependencies and installed versions |
+| `.gitignore` | Files excluded from version control |
 
-    py -3.12 -m venv .venv
-    .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-    .\.venv\Scripts\python.exe -m jupyterlab
+## Setup on Windows
 
-Open race_analysis.ipynb and run the cells in order.
-The notebook loads the included CSV snapshots from data/raw/.
-No internet connection is required to run the analysis after installing the dependencies.
+Python 3.12 is used for this project.
+
+Clone the repository and enter its folder:
+
+```powershell
+git clone https://github.com/Aishendo/f1-race-analysis.git
+cd f1-race-analysis
+```
+
+Create a virtual environment and install dependencies:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Start JupyterLab from the project folder:
+
+```powershell
+.\.venv\Scripts\python.exe -m jupyterlab
+```
+
+Open `race_analysis.ipynb` and run all cells in order.
+
+Alternatively, open the project in VS Code, install the Microsoft
+Python and Jupyter extensions, and select the `.venv` notebook kernel.
+
+A private repository requires GitHub access to clone.
+
+## Libraries
+
+- pandas: loading, filtering, joining and summarising tables
+- Matplotlib: visualisations
+- JupyterLab and ipykernel: notebook execution
+
+The notebook also imports NumPy. Requests was used during the
+initial API data collection.
+
+## Method
+
+Original snapshots are preserved. Pace statistics use a separate
+filtered table that excludes:
+- The first race lap
+- Pit-out laps marked by OpenF1
+- Presumed pit-in laps immediately preceding a pit-out lap,
+  when lap numbers are consecutive
+- Missing or non-positive lap times
+
+Statistics include lap count, median lap time, sample standard
+deviation and fastest retained lap.
+
+For tyre analysis, laps are matched to stint boundaries.
+Tyre age at the start of a lap is calculated from the initial
+tyre age and the lap's position within the stint.
+
+## Main findings
+
+Among the three main drivers, Piastri had the lowest median
+filtered lap time: 83.468 seconds. Norris recorded 83.591 seconds
+and Leclerc 83.716 seconds.
+
+Leclerc nevertheless won, finishing 2.664 seconds ahead of
+Piastri and 6.153 seconds ahead of Norris.
+
+Leclerc used one stop, while Norris and Piastri used two.
+Leclerc's final Hard stint covered 38 laps.
+
+These results illustrate why filtered median pace alone
+does not determine the final race result.
+
+## Limitations
+
+This is a descriptive study of one race, not a causal model
+or an estimate of the optimal strategy.
+
+Traffic, fuel load, weather and local yellow flags are not
+controlled for. Tyre-age plots also reflect other changes
+throughout the race and do not isolate tyre degradation.
+
+Drivers who retired or were lapped covered different race
+distances, limiting direct comparisons of their summary statistics.
+
+No Safety Car, VSC or red-flag messages were found by the filter
+applied to the downloaded race control data.
+
+## Outputs
+
+Running the notebook exports:
+- `data/processed/monza_2024_pace_vs_results.csv`
+- `data/processed/monza_2024_all_drivers_overview.csv`
