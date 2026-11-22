@@ -184,3 +184,35 @@ def plot_lap_time_distributions(
 
     fig.tight_layout()
     return fig, ax
+
+def plot_hard_tyre_pace(
+    hard_laps: pd.DataFrame,
+    driver_numbers: list[int],
+    driver_names: dict[int, str],
+    colors: dict[int, str],
+):
+    """Plot lap time against tyre age for each hard-tyre stint."""
+    fig, ax = plt.subplots(figsize=(11, 5))
+
+    for number in driver_numbers:
+        driver_laps = hard_laps.loc[hard_laps["driver_number"].eq(number)]
+
+        for stint_number, stint in driver_laps.groupby("stint_number"):
+            stint = stint.sort_values("tyre_age_start_of_lap")
+            ax.plot(
+                stint["tyre_age_start_of_lap"],
+                stint["lap_duration"],
+                marker=".",
+                color=colors[number],
+                linestyle="--" if stint_number == 3 else "-",
+                label=f"{driver_names[number]} — stint {stint_number}",
+            )
+
+    ax.set_title("Monza 2024 — Lap time vs Hard tyre age")
+    ax.set_xlabel("Tyre age at start of lap (laps)")
+    ax.set_ylabel("Lap time (seconds)")
+    ax.legend()
+    ax.grid(alpha=0.3)
+
+    fig.tight_layout()
+    return fig, ax
