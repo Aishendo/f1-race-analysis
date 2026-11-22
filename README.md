@@ -26,12 +26,22 @@ Data was originally downloaded from the
 Race: 2024 Italian Grand Prix, Monza.
 Session key: `9590`.
 
-The included CSV snapshots contain:
-- Drivers
-- Lap times
-- Tyre stints
-- Race control messages
-- Final session results
+### Original OpenF1 requests
+
+The race session key was found with
+`GET https://api.openf1.org/v1/sessions?year=2024&session_name=Race`.
+The Monza race has session key `9590`.
+
+| Snapshot in `data/raw/` | Original GET request |
+| --- | --- |
+| `monza_2024_drivers.csv` | `https://api.openf1.org/v1/drivers?session_key=9590` |
+| `monza_2024_laps.csv` | `https://api.openf1.org/v1/laps?session_key=9590` |
+| `monza_2024_stints.csv` | `https://api.openf1.org/v1/stints?session_key=9590` |
+| `monza_2024_race_control.csv` | `https://api.openf1.org/v1/race_control?session_key=9590` |
+| `monza_2024_session_result.csv` | `https://api.openf1.org/v1/session_result?session_key=9590` |
+
+The API responses were read as JSON, converted to pandas DataFrames,
+and saved as CSV files.
 
 The notebook reads the snapshots from `data/raw/`.
 After dependencies are installed, running the analysis does not
