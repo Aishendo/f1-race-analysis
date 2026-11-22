@@ -7,6 +7,7 @@ def plot_race_pace(
     drivers: pd.DataFrame,
     driver_numbers: list[int],
     total_laps: int,
+    colors: dict[int, str] | None = None,
 ):
     """Plot filtered lap times for selected drivers.
 
@@ -20,6 +21,7 @@ def plot_race_pace(
     Returns:
         The Matplotlib figure and axes.
     """
+    colors = colors or {}
     names = drivers.set_index("driver_number")["full_name"].to_dict()
     fig, ax = plt.subplots(figsize=(12, 5))
 
@@ -37,6 +39,7 @@ def plot_race_pace(
             lap_times.index,
             lap_times,
             label=names[number],
+            color=colors.get(number),
             linewidth=1.5,
         )
 
@@ -158,6 +161,7 @@ def plot_lap_time_distributions(
     pace_laps: pd.DataFrame,
     driver_numbers: list[int],
     driver_names: dict[int, str],
+    colors: dict[int, str],
 ):
     """Plot filtered lap-time distributions for the selected drivers."""
     lap_time_groups = [
@@ -169,11 +173,16 @@ def plot_lap_time_distributions(
     ]
 
     fig, ax = plt.subplots(figsize=(9, 5))
-    ax.boxplot(
+    boxplot = ax.boxplot(
         lap_time_groups,
         tick_labels=[driver_names[number] for number in driver_numbers],
         showmeans=True,
+        patch_artist=True,
     )
+
+    for box, number in zip(boxplot["boxes"], driver_numbers):
+        box.set_facecolor(colors[number])
+        box.set_alpha(0.4)
 
     ax.set_title(
         "Monza 2024 — Lap time distributions\n"
@@ -222,8 +231,10 @@ def plot_teammate_pace(
     team_pairs: dict[str, list[int]],
     driver_names: dict[int, str],
     total_laps: int,
+    colors: dict[int, str] | None = None,
 ):
     """Compare filtered lap times for teammates across four teams."""
+    colors = colors or {}
     fig, axes = plt.subplots(
         2, 2, figsize=(14, 9), sharex=True, sharey=True
     )
@@ -244,6 +255,7 @@ def plot_teammate_pace(
                 lap_times,
                 linestyle=style,
                 label=driver_names[number],
+                color=colors.get(number),
                 linewidth=1.5,
             )
 
