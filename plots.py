@@ -153,3 +153,34 @@ def plot_all_lap_times(
 
     fig.tight_layout()
     return fig, ax
+
+def plot_lap_time_distributions(
+    pace_laps: pd.DataFrame,
+    driver_numbers: list[int],
+    driver_names: dict[int, str],
+):
+    """Plot filtered lap-time distributions for the selected drivers."""
+    lap_time_groups = [
+        pace_laps.loc[
+            pace_laps["driver_number"].eq(number),
+            "lap_duration",
+        ].to_numpy()
+        for number in driver_numbers
+    ]
+
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.boxplot(
+        lap_time_groups,
+        tick_labels=[driver_names[number] for number in driver_numbers],
+        showmeans=True,
+    )
+
+    ax.set_title(
+        "Monza 2024 — Lap time distributions\n"
+        "Start and pit-related laps excluded"
+    )
+    ax.set_ylabel("Lap time (seconds)")
+    ax.grid(axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    return fig, ax
