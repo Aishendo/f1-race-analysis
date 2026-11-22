@@ -216,3 +216,46 @@ def plot_hard_tyre_pace(
 
     fig.tight_layout()
     return fig, ax
+
+def plot_teammate_pace(
+    pace_laps: pd.DataFrame,
+    team_pairs: dict[str, list[int]],
+    driver_names: dict[int, str],
+    total_laps: int,
+):
+    """Compare filtered lap times for teammates across four teams."""
+    fig, axes = plt.subplots(
+        2, 2, figsize=(14, 9), sharex=True, sharey=True
+    )
+
+    for ax, (team, numbers) in zip(axes.flat, team_pairs.items()):
+        for number, style in zip(numbers, ["-", "--"]):
+            driver_laps = pace_laps.loc[
+                pace_laps["driver_number"].eq(number)
+            ].sort_values("lap_number")
+
+            lap_times = (
+                driver_laps.set_index("lap_number")["lap_duration"]
+                .reindex(range(1, total_laps + 1))
+            )
+
+            ax.plot(
+                lap_times.index,
+                lap_times,
+                linestyle=style,
+                label=driver_names[number],
+                linewidth=1.5,
+            )
+
+        ax.set_title(team)
+        ax.legend(fontsize=9)
+        ax.grid(alpha=0.3)
+
+    fig.suptitle(
+        "Monza 2024 — Teammate race pace comparison\n"
+        "Start and pit-related laps excluded"
+    )
+    fig.supxlabel("Race lap")
+    fig.supylabel("Lap time (seconds)")
+    fig.tight_layout()
+    return fig, axes
