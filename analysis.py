@@ -57,3 +57,32 @@ def summarise_pace(pace_laps: pd.DataFrame) -> pd.DataFrame:
         std_seconds=("lap_duration", "std"),
         fastest_seconds=("lap_duration", "min"),
     )
+
+def match_laps_to_stints(
+    laps: pd.DataFrame, stints: pd.DataFrame
+) -> pd.DataFrame:
+    """Match laps to tyre stints and calculate tyre age at each lap start."""
+    lap_stints = laps.merge(
+        stints[[
+            "driver_number",
+            "stint_number",
+            "compound",
+            "lap_start",
+            "lap_end",
+            "tyre_age_at_start",
+        ]],
+        on="driver_number",
+        how="left",
+    )
+
+    in_stint = lap_stints["lap_number"].between(
+        lap_stints["lap_start"], lap_stints["lap_end"]
+    )
+    lap_stints = lap_stints.loc[in_stint].copy()
+
+    lap_stints["tyre_age_start_of_lap"] = (
+        lap_stints["tyre_age_at_start"]
+        + lap_stints["lap_number"]
+        - lap_stints["lap_start"]
+    )
+    return lap_stints
