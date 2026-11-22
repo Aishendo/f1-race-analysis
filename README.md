@@ -94,6 +94,20 @@ Python and Jupyter extensions, and select the `.venv` notebook kernel.
 
 A private repository requires GitHub access to clone.
 
+## Run the Streamlit app
+
+After installing the dependencies in **Setup on Windows**, run this
+command from the project folder:
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run streamlit_app.py
+```
+
+Open the **Local URL** printed in the terminal. Use the sidebar to
+navigate between Race overview, Race pace, Tyre strategies, Teammates
+and Conclusions. The app reads the included OpenF1 snapshots directly
+from `data/raw/` and can run independently of the notebook.
+
 ## Libraries
 
 - pandas: loading, filtering, joining and summarising tables
