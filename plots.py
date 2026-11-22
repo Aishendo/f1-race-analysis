@@ -122,3 +122,34 @@ def plot_tyre_strategies(
 
     fig.tight_layout()
     return fig, ax
+
+def plot_all_lap_times(
+    laps: pd.DataFrame,
+    driver_numbers: list[int],
+    driver_names: dict[int, str],
+    colors: dict[int, str],
+):
+    """Plot all recorded lap times for the selected drivers."""
+    fig, ax = plt.subplots(figsize=(12, 5))
+
+    for number in driver_numbers:
+        driver_laps = laps.loc[
+            laps["driver_number"].eq(number)
+        ].sort_values("lap_number")
+
+        ax.plot(
+            driver_laps["lap_number"],
+            driver_laps["lap_duration"],
+            label=driver_names[number],
+            color=colors[number],
+            linewidth=1.5,
+        )
+
+    ax.set_title("Monza 2024 — Lap times (all laps)")
+    ax.set_xlabel("Lap number")
+    ax.set_ylabel("Lap time (seconds)")
+    ax.legend()
+    ax.grid(alpha=0.3)
+
+    fig.tight_layout()
+    return fig, ax
